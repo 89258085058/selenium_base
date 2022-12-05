@@ -43,6 +43,6 @@ class CartPageHelpers:
         self.PushCartButton()
         name = 'Стиральная машина узкая Candy Smart Pro CO34 106TB1/2-07'
         price = '26 499 ₽'
-        print(self.getNameProduct())
-        print(self.getPriceProduct())
+        assert str(self.getNameProduct()) == name
+        assert str(self.getPriceProduct()) == price
 
