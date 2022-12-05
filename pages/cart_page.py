@@ -1,24 +1,48 @@
+# -*- coding: utf-8 -*-
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from base.base_class import Base
+
+cart_button = '(//*[@type="cart"])[1]'
+
+nameWM = '//*[@class="cart-item__name ng-star-inserted"]'
+priceWM = '(//*[@class="price__main-value"])[1]'
 
 
-class Cart_page(Base):
+class CartPageHelpers:
 
-    def __init__(self, driver):
-        super().__init__(driver)
-        self.driver = driver
+    def __init__(self, app):
+        self.app = app
 
-    checkout_button = "//button[@id='checkout']"
+    # Клик по кнопке корзина
+    def PushCartButton(self, locator=cart_button):
+        wd = self.app.wd
+        element = WebDriverWait(wd, 10).until(
+            EC.element_to_be_clickable((By.XPATH, ('%s' % locator))))
+        element.click()
+        time.sleep(2)
 
-    def get_checkout_button(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.checkout_button)))
+    # Получение наименования товара
+    def getNameProduct(self, locator=nameWM):
+        wd = self.app.wd
+        element = WebDriverWait(wd, 10).until(
+            EC.element_to_be_clickable((By.XPATH, ('%s' % locator))))
+        return element.text()
 
-    def click_checkout_button(self):
-        self.get_checkout_button().click()
-        print("Click Checkout button")
+    # Получение цены товара
+    def getPriceProduct(self, locator=priceWM):
+        wd = self.app.wd
+        element = WebDriverWait(wd, 10).until(
+            EC.element_to_be_clickable((By.XPATH, ('%s' % locator))))
+        return element.text()
 
-    def confirm_product(self):
-        self.get_current_url()
-        self.click_checkout_button()
+    # Метод проверки соответствия цены и товара в корзине
+    def compliance_checks_product(self):
+        self.PushCartButton()
+        name = 'Стиральная машина узкая Candy Smart Pro CO34 106TB1/2-07'
+        price = '26 499 ₽'
+        print(self.getNameProduct())
+        print(self.getPriceProduct())
+
